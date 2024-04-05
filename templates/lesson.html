@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Language Lesson</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+</head>
+<body>
+  <div class="container">
+    <p id="current-sign">Learning signs</p>
+    <div class="row" >
+      <div class="col-md-6">
+        <video class="w-100" id="demo-video" src="{{url_for('static' , filename = 'A.mp4')}}"  controls></video>
+
+      </div>
+      <div class="col-md-5">
+        <img id="video-stream" src="{{ url_for('video_stream') }}" alt="Live Video Stream">     
+
+      </div>
+  </div>
+  <div class="row">  
+    <div class="col-md-2 d-flex justify-content-end"></div>
+    <button id="next-button" class = 'btn btn-primary'>Next Sign</button>
+  </div>
+</div>      
+      
+    </div>
+
+  </div>
+  
+
+ 
+</body>
+</html>
