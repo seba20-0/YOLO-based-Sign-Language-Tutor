@@ -3,49 +3,75 @@ import cv2
 import math
 
 def RunYOLOWebcam(path_x):
-  # start webcam
-  cap = cv2.VideoCapture(path_x)
-  frame_width=int(cap.get(3))
-  frame_height=int(cap.get(4))
+    # Start webcam
+    #global class_name
+    cap = cv2.VideoCapture(path_x)
+    desired_width = 540
+    desired_height = 300
+    # Model
+    model = YOLO("best.pt")
 
-  # model
-  model = YOLO("best.pt")
-
-  # object classes
-  classNames = [""] * 26  # Create an array with 26 empty strings
-
-  for i in range(26):
-    classNames[i] = chr(65 + i)  # Fill the array with uppercase letters (A-Z)
+    # Object classes
+    classNames = [""] * 26  # Create an array with 26 empty strings
+    for i in range(26):
+        classNames[i] = chr(65 + i)  # Fill the array with uppercase letters (A-Z)
 
     while True:
         success, img = cap.read()
-        results=model(img,stream=True)
+        if not success:
+            break
+
+        # Perform YOLO detection on the original image
+        results = model(img, stream=True)
+
+        # Save bounding box coordinates
+        bounding_boxes = []
+        detected_classes = []
+        confidence_scores = []
         for r in results:
             boxes = r.boxes
-
             for box in boxes:
-                # bounding box
-                x1, y1, x2, y2 = box.xyxy[0]
-                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+                x1, y1, x2, y2 = box.xyxyn[0]
+                bounding_boxes.append((x1, y1, x2, y2))
+                detected_class = classNames[int(box.cls[0])]
+                detected_classes.append(detected_class)
+                confidence_scores.append(box.conf[0])
 
-                # put box in cam
-                cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+        # Resize the image to the desired resolution
+        img_resized = cv2.resize(img, (desired_width, desired_height))
 
-                # confidence
-                confidence = math.ceil((box.conf[0]*100))/100
+        # Resize the bounding boxes to match the resized image
+        resized_bounding_boxes = []
+        for box in bounding_boxes:
+            x1, y1, x2, y2 = box
+            x1_resized, y1_resized, x2_resized, y2_resized = int(x1 * desired_width), \
+                                                            int(y1 * desired_height), \
+                                                            int(x2 * desired_width), \
+                                                            int(y2 * desired_height)
+            resized_bounding_boxes.append((x1_resized, y1_resized, x2_resized, y2_resized))
+        # Draw bounding boxes on the resized image
+        # Draw bounding boxes on the resized image
+        for box, detected_class, confidence_score in zip(resized_bounding_boxes, detected_classes ,  confidence_scores):
+            x1, y1, x2, y2 = box
+            # Calculate confidence score based on detected_class
+            label = f'{detected_class} {confidence_score:.2f}'  # Concatenate class name and confidence score
+            cv2.rectangle(img_resized, (x1, y1), (x2, y2), (255, 0, 255), 3)
+            cv2.putText(img_resized, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
 
-                # class name
-                cls = int(box.cls[0])
-                class_name=classNames[cls]
-                label=f'{class_name}{confidence}'
-                t_size = cv2.getTextSize(label, 0, fontScale=1, thickness=2)[0]
-                c2 = x1 + t_size[0], y1 - t_size[1] - 3
 
-                color = (85,45,255)
-                if confidence>0.5:
-                    cv2.rectangle(img, (x1,y1), (x2,y2), color,3)
-                    cv2.rectangle(img, (x1,y1), c2, color, -1, cv2.LINE_AA)  # filled
-                    cv2.putText(img, label, (x1,y1-2),0, 1,[255,255,255], thickness=1,lineType=cv2.LINE_AA)
+        #class_name = detected_class
+        # Resize the image to the desired resolution
+        #img_resized = cv2.resize(img, (desired_width, desired_height))
 
-        yield img
+        
+
+        # Draw bounding boxes on the resized image
+        #for box in bounding_boxes:
+         #   x1, y1, x2, y2 = box
+          #  cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+        
+        
+
+        yield img_resized,detected_classes
+
     cv2.destroyAllWindows()
