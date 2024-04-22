@@ -7,6 +7,13 @@
 
 </head>
 <style>
+  body.modal-open .supreme-container{
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+}
   .banner {
   padding: 20px; /* Adjust padding as needed */
   background-color: #007bff; /* Blue color */
@@ -16,7 +23,7 @@
 }
 </style>
 <body style="background-color: #f8f9fa">
-  <div class="container mt-5">
+  <div class="container mt-5 supreme-container">
     <p id="current-sign" class="text-center banner mt-3">Learning signs</p>
     <div class="row mt-5" >
       <div class="col-md-6">
@@ -54,8 +61,30 @@
       
   </div>
 
+
+</div>
+<div class="modal fade" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="loading-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <div class="modal-body text-center">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p>Loading webcam...</p>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
+  $(document).ready(function() {
+  // Show loading modal initially
+  $('#loading-modal').modal('show');
+
+  
+  $(window).on('load', function () {
+    $('#loading-modal').modal('hide');
+  }) 
+
+});
   $(document).ready(function() {
     var videoSignMap = {
       'A.mp4': 'A',
