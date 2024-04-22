@@ -5,8 +5,7 @@ from YOLOWebcam import RunYOLOWebcam
 app = Flask(__name__, static_folder='static')
 app.config['SECRET_KEY'] = 'seba'
 
-display_width = 546
-display_height = 275
+
 class_name=""
 last_classes=[]
 @app.route('/stop_detection', methods=['POST'])
@@ -27,6 +26,7 @@ def generate_frames(path_x):
         if video_name != "" and class_name == video_name:
                 print(f'Video: {video_name}' , f'Class: {class_name}')
                 print("Detected class matches current video name. Stopping detection.")
+                last_classes=class_name
                 break  # Exit the loop to stop the detection
         #print(last_classes)
         ref,buffer=cv2.imencode('.jpg',detection_)
@@ -40,7 +40,7 @@ def get_class():
     #global class_name
     global last_classes
     if len(last_classes) > 0: 
-        val = last_classes[0]
+        val = last_classes[-1]
         last_classes=[]
         print(last_classes)
         return val
