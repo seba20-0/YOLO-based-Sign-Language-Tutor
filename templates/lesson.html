@@ -73,28 +73,35 @@
       'B.mp4': 'B',
       'C.mp4': 'C',
       'D.mp4': 'D',
-      'E.mp4': 'E'
+      'E.mp4': 'E',
+      'H.mp4': 'H',
+      'L.mp4': 'L'
     };
     var currentVideo = 'A';
     var count = 0; // add counter to display the success modal once only
-    
+    var currentIndex = 0;
 
     // Function to set the next video source
-    function setNextVideoSource() {
-      var videoSources = Object.keys(videoSignMap);
-      var randomIndex = Math.floor(Math.random() * videoSources.length);
-      while (videoSources[randomIndex] === currentVideo) {
-        randomIndex = Math.floor(Math.random() * videoSources.length);
-      }
-      currentVideo = videoSources[randomIndex];
-      $('#demo-video').attr('src', '{{ url_for("static", filename="") }}' + currentVideo);
-      $('#demo-video').get(0).load();
-      sendVideoNameToBackend(); // Send the video name to the backend when video changes
-    }
+  function setNextVideoSource() {
+  var videoSources = Object.keys(videoSignMap);
+
+  // Handle reaching the end of the video list
+  if (currentIndex === videoSources.length) {
+    console.log("Reached end of video list. Resetting to first video.");
+    currentIndex = 0;
+  }
+
+  currentVideo = videoSources[currentIndex];
+
+  $('#demo-video').attr('src', '{{ url_for("static", filename="") }}' + currentVideo);
+  $('#demo-video').get(0).load();
+  sendVideoNameToBackend(); // Send the video name to the backend when video changes
+}
 
     // Set the next video source when the "Next Sign" button is clicked
     $('#next-button').click(function() {
       count = 0; // reset count when moving to a new video
+      currentIndex++;
       setNextVideoSource();
       
     });
@@ -112,7 +119,7 @@
         if(count === 1){
           setTimeout(function() {
           $('#success-modal').modal('show');}, 3000);
-        }
+      }
 
       }
         
