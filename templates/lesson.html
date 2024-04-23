@@ -76,7 +76,8 @@
       'E.mp4': 'E'
     };
     var currentVideo = 'A';
-    var detected;
+    var count = 0; // add counter to display the success modal once only
+    
 
     // Function to set the next video source
     function setNextVideoSource() {
@@ -93,8 +94,9 @@
 
     // Set the next video source when the "Next Sign" button is clicked
     $('#next-button').click(function() {
+      count = 0; // reset count when moving to a new video
       setNextVideoSource();
-      detected = false;
+      
     });
 
     // Function to handle YOLO detection success
@@ -105,12 +107,15 @@
       currentVideo = currentVideo.split('.')[0];
       if (currentVideo === sign) {
         console.log("Matching video and sign detected");
-        detected = true;
+        count++;
         // Show success modal
-        setTimeout(function() {
-      $('#success-modal').modal('show');
-      }, 3000);
+        if(count === 1){
+          setTimeout(function() {
+          $('#success-modal').modal('show');}, 3000);
+        }
+
       }
+        
     }
 
     function sendVideoNameToBackend() {
