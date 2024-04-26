@@ -16,15 +16,16 @@
       </div>
 
       <div class="col">
-        <label for="textbox">The sign is:</label>
-        <input type="text" id="signText" name="signTextbox">
+        <form>
+          <input type="text" id="signText" name="signTextbox">
+        </form>
       </div>
     </div>
 
     <div class="row mt-3">  
       <div class="col-md-12 d-flex justify-content-end">
         <div class="d-flex flex-row-reverse justify-content-end"> 
-          <button id="submit-button" onclick="handleCorrectAnswer" class="btn btn-primary">Submit</button> 
+          <button id="submit-button" class="btn btn-primary" disabled>Submit</button> 
         </div>
       </div>
       </div>
@@ -48,21 +49,17 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="success-modal-label">Good job!</h5>
+          <h5 class="modal-title" id="success-modal-label">Oops!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Oops! Try again!
+          Try again!
         </div>
       </div>
     </div>
   </div>
 
 <script>
-  $(document).ready(function() {
-  
- 
-});
 $(document).ready(function() {
     var videoSignMap = {
       'A2.mp4': 'A',
@@ -92,51 +89,54 @@ $(document).ready(function() {
       'Y2.mp4': 'Y',
       'Z2.mp4': 'Z'
     };
+
+    var signTextbox= '';
+    signTextbox = document.getElementById("signText");
     var currentVideo = 'A';
     var currentIndex = 0;
-    var textBoxValue = document.getElementById("signText").value;
-    console.log(textBoxValue);
+    console.log('hello');
+
+    // Function to set the next video source
+  function setNextVideoSource() {
+    var videoSources = Object.keys(videoSignMap);
+
+    // Handle reaching the end of the video list
+    if (currentIndex === videoSources.length) {
+      console.log("Reached end of video list. Resetting to first video.");
+      currentIndex = 0;
+    }
+
     currentVideo = videoSources[currentIndex];
 
-    function toggleButton() {
-        var submitButton = document.getElementById("submit-button");
+    $('#demo-video').attr('src', '{{ url_for("static", filename="") }}' + currentVideo);
+    $('#demo-video').get(0).load();
+  }
 
-        submitButton.disabled = textBoxValue.trim() === "";
+  signTextbox.onkeyup = function() {
+    console.log(signTextbox.value);
+    if (signTextbox.value != "") {
+      document.getElementById('submit-button').removeAttribute("disabled");
+    }else {
+        document.getElementById('submit-button').setAttribute("disabled", null);
     }
-
-    function setNextVideoSource() {
-      var videoSources = Object.keys(videoSignMap);
-
-      // Handle reaching the end of the video list
-      if (currentIndex === videoSources.length){
-        console.log("Reached end of video list. Resetting to first video.");
-        currentIndex = 0;
-      }
-
-      $('#demo-video').attr('src', '{{ url_for("static", filename="") }}' + currentVideo);
-      $('#demo-video').get(0).load();
-      sendVideoNameToBackend(); // Send the video name to the backend when video changes
-    }
+  }
 
   $('#submit-button').click(function() {
-      handleCorrectAnswer(textBoxValue);
+      handleCorrectAnswer(signTextbox.value);
+      setNextVideoSource();
     });
 
     function handleCorrectAnswer(text){
       var video = currentVideo.split('2')[0];
-      console.log(video);
 
-      if (video === text) {
-        console.log("Correct text answer");
-        currentIndex++;
+      if (video === text.toUpperCase()){
         setTimeout(function() {
-        $('#success-modal').modal('show');}, 3000);
+        $('#success-modal').modal('show');}, 0);
+        currentIndex++;
       }else{
         setTimeout(function() {
-          $('#fail-modal').modal('show');}, 3000);
+          $('#fail-modal').modal('show');}, 0);
       }
-
-      setNextVideoSource();
     }
   });
 </script>
