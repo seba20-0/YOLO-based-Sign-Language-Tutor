@@ -91,13 +91,7 @@ $(document).ready(function() {
     var currentVideo = 'A';
     var currentIndex = 0;
     currentVideo = Object.keys(videoSignMap)[currentIndex];
-    console.log(currentVideo);
-
-   // function toggleButton() {
-     //   var submitButton = document.getElementById("submit-button");
-
-       // submitButton.disabled = textBoxValue.trim() === "";
-    //}
+    var signTextbox = document.getElementById("signText");
 
     function setNextVideoSource() {
       var videoSources = Object.keys(videoSignMap);
@@ -116,8 +110,17 @@ $(document).ready(function() {
       $('#demo-video').get(0).load();
     }
 
+    signTextbox.onkeyup = function() {
+    console.log(signTextbox.value);
+    if (signTextbox.value != "") {
+      document.getElementById('submit-button').removeAttribute("disabled");
+    }else {
+        document.getElementById('submit-button').setAttribute("disabled", null);
+    }
+  }
+
   $('#submit-button').click(function() {
-      var textBoxValue = $('#signText').val(); // Retrieve current input field value
+      var textBoxValue = signTextbox.value; // Retrieve current input field value
       handleCorrectAnswer(textBoxValue);
     });
 
@@ -127,13 +130,11 @@ $(document).ready(function() {
       if (video === text) {
         console.log("Correct text answer");
         setTimeout(function() {
-        $('#success-modal').modal('show');}, 2000);
+        $('#success-modal').modal('show');}, 100);
         
       }else{
         setTimeout(function() {
           $('#fail-modal').modal('show');$('#signText').val('');}, 2000);
-          
-
       }
 
     }
