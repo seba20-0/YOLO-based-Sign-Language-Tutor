@@ -10,10 +10,10 @@ class_name=""
 last_classes=[]
 @app.route('/stop_detection', methods=['POST'])
 def stop_detection():
-    print(request.form)
+    #print(request.form)
     global video_name
     video_name = request.form.get('video_name').split('.')[0]
-    print(f'Video: {video_name}')
+    #print(f'Video: {video_name}')
     return video_name
 
 def generate_frames(path_x):
@@ -24,8 +24,8 @@ def generate_frames(path_x):
             global last_classes
             last_classes=classes
         if video_name != "" and class_name == video_name:
-                print(f'Video: {video_name}' , f'Class: {class_name}')
-                print("Detected class matches current video name. Stopping detection.")
+                # print(f'Video: {video_name}' , f'Class: {class_name}')
+                # print("Detected class matches current video name. Stopping detection.")
                 last_classes=class_name
                 break  # Exit the loop to stop the detection
         #print(last_classes)
@@ -42,7 +42,7 @@ def get_class():
     if len(last_classes) > 0: 
         val = last_classes[-1]
         last_classes=[]
-        print(last_classes)
+        #print(last_classes)
         return val
     return last_classes
 
