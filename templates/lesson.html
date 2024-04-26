@@ -108,6 +108,7 @@
   if (currentIndex === videoSources.length) {
     console.log("Reached end of video list. Resetting to first video.");
     currentIndex = 0;
+    window.location.href = "/test";
   }
 
   currentVideo = videoSources[currentIndex];
