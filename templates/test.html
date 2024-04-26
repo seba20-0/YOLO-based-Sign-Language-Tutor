@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Language Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="container mt-5 supreme-container">
+    <p id="current-sign" class="text-center banner mt-3">Learning signs</p>
+    <div class="row mt-5" >
+      <div class="col-md-6">
+        <video class="w-100" id="demo-video" src="{{url_for('static' , filename = 'A2.mp4')}}" controls></video>
+      </div>
+
+      <div class="col">
+        <label for="textbox">The sign is:</label>
+        <input type="text" id="signText" name="signTextbox">
+      </div>
+    </div>
+
+    <div class="row mt-3">  
+      <div class="col-md-12 d-flex justify-content-end">
+        <div class="d-flex flex-row-reverse justify-content-end"> 
+          <button id="submit-button" onclick="handleCorrectAnswer" class="btn btn-primary">Submit</button> 
+        </div>
+      </div>
+      </div>
+  </div>
+
+  <div id="success-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="success-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="success-modal-label">Good job!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Correct!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fail-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="success-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="success-modal-label">Good job!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Oops! Try again!
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  $(document).ready(function() {
+  
+ 
+});
+$(document).ready(function() {
+    var videoSignMap = {
+      'A2.mp4': 'A',
+      'B2.mp4': 'B',
+      'C2.mp4': 'C',
+      'D2.mp4': 'D',
+      'E2.mp4': 'E',
+      'F2.mp4': 'F',
+      'G2.mp4': 'G',
+      'H2.mp4': 'H',
+      'I2.mp4': 'I',
+      'J2.mp4': 'J',
+      'K2.mp4': 'K',
+      'L2.mp4': 'L',
+      'M2.mp4': 'M',
+      'N2.mp4': 'N',
+      'O2.mp4': 'O',
+      'P2.mp4': 'P',
+      'Q2.mp4': 'Q',
+      'R2.mp4': 'R',
+      'S2.mp4': 'S',
+      'T2.mp4': 'T',
+      'U2.mp4': 'U',
+      'V2.mp4': 'V',
+      'W2.mp4': 'W',
+      'X2.mp4': 'X',
+      'Y2.mp4': 'Y',
+      'Z2.mp4': 'Z'
+    };
+    var currentVideo = 'A';
+    var currentIndex = 0;
+    var textBoxValue = document.getElementById("signText").value;
+    console.log(textBoxValue);
+    currentVideo = videoSources[currentIndex];
+
+    function toggleButton() {
+        var submitButton = document.getElementById("submit-button");
+
+        submitButton.disabled = textBoxValue.trim() === "";
+    }
+
+    function setNextVideoSource() {
+      var videoSources = Object.keys(videoSignMap);
+
+      // Handle reaching the end of the video list
+      if (currentIndex === videoSources.length){
+        console.log("Reached end of video list. Resetting to first video.");
+        currentIndex = 0;
+      }
+
+      $('#demo-video').attr('src', '{{ url_for("static", filename="") }}' + currentVideo);
+      $('#demo-video').get(0).load();
+      sendVideoNameToBackend(); // Send the video name to the backend when video changes
+    }
+
+  $('#submit-button').click(function() {
+      handleCorrectAnswer(textBoxValue);
+    });
+
+    function handleCorrectAnswer(text){
+      var video = currentVideo.split('2')[0];
+      console.log(video);
+
+      if (video === text) {
+        console.log("Correct text answer");
+        currentIndex++;
+        setTimeout(function() {
+        $('#success-modal').modal('show');}, 3000);
+      }else{
+        setTimeout(function() {
+          $('#fail-modal').modal('show');}, 3000);
+      }
+
+      setNextVideoSource();
+    }
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

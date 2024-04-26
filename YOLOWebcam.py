@@ -15,7 +15,7 @@ def RunYOLOWebcam(path_x):
     classNames = [""] * 26  # Create an array with 26 empty strings
     for i in range(26):
         classNames[i] = chr(65 + i)  # Fill the array with uppercase letters (A-Z)
-
+    
     while True:
         success, img = cap.read()
         if not success:
@@ -49,7 +49,7 @@ def RunYOLOWebcam(path_x):
                                                             int(x2 * desired_width), \
                                                             int(y2 * desired_height)
             resized_bounding_boxes.append((x1_resized, y1_resized, x2_resized, y2_resized))
-        # Draw bounding boxes on the resized image
+            
         # Draw bounding boxes on the resized image
         for box, detected_class, confidence_score in zip(resized_bounding_boxes, detected_classes ,  confidence_scores):
             x1, y1, x2, y2 = box
@@ -62,9 +62,7 @@ def RunYOLOWebcam(path_x):
         #class_name = detected_class
         # Resize the image to the desired resolution
         #img_resized = cv2.resize(img, (desired_width, desired_height))
-
         
-
         # Draw bounding boxes on the resized image
         #for box in bounding_boxes:
          #   x1, y1, x2, y2 = box

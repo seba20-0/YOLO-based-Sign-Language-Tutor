@@ -18,7 +18,7 @@ def stop_detection():
 
 def generate_frames(path_x):
     global class_name  # Declare class_name as global to modify it within this function
-    yolo_output = RunYOLOWebcam(path_x)  
+    yolo_output = RunYOLOWebcam(path_x)
     for detection_, classes in yolo_output:
         if len(classes) > 0: 
             global last_classes
@@ -59,6 +59,11 @@ def home():
 def lesson():
     session.clear()
     return render_template('lesson.html')
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    session.clear()
+    return render_template('test.html')
 
 @app.route('/video_stream')
 def video_stream():
