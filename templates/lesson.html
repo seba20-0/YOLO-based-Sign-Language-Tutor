@@ -16,7 +16,7 @@
 
       </div>
       <div class="col">
-        <img id="video-stream" src="{{ url_for('video_stream') }}" alt="Live Video Stream" width="600" height="360">     
+        <img id="video-stream" src="{{ url_for('video_stream') }}" alt="Live Video Stream" >     
 
       </div>
   </div>
@@ -138,7 +138,7 @@
         // Show success modal
         if(count === 1){
           setTimeout(function() {
-          $('#success-modal').modal('show');}, 3000);
+          $('#success-modal').modal('show');}, 1500);
       }
 
       }
