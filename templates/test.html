@@ -92,10 +92,11 @@ $(document).ready(function() {
     var currentIndex = 0;
     currentVideo = Object.keys(videoSignMap)[currentIndex];
     var signTextbox = document.getElementById("signText");
+    var tries = 3;
 
     function setNextVideoSource() {
       var videoSources = Object.keys(videoSignMap);
-
+      tries = 3;
       // Handle reaching the end of the video list
       if (currentIndex === videoSources.length){
         console.log("Reached end of video list. Resetting to first video.");
@@ -121,23 +122,39 @@ $(document).ready(function() {
 
   $('#submit-button').click(function() {
       var textBoxValue = signTextbox.value; // Retrieve current input field value
+      tries = tries - 1;
       handleCorrectAnswer(textBoxValue);
     });
 
     function handleCorrectAnswer(text){
       var video = currentVideo.split('2')[0];
-
-      if (video === text) {
+      
+      if (video === text.toUpperCase()) {
         console.log("Correct text answer");
         setTimeout(function() {
+        $(".modal-body").html("Your answer is correct!");
         $('#success-modal').modal('show');}, 100);
-        
       }else{
-        setTimeout(function() {
-          $('#fail-modal').modal('show');$('#signText').val('');}, 2000);
-      }
+        console.log(tries);
+        if(tries>0){
+          setTimeout(function() {
+          $(".modal-body").html("Oops! Incorrect answer! You have " + tries + " tries.");
+          $('#fail-modal').modal('show');
+          $('#signText').val('');}, 100);
+        }else{
+          setTimeout(function() {
+          $(".modal-body").html("Youve run out of tries! The sign is "+ video);
+          $('#fail-modal').modal('show');
+          $('#signText').val('');}, 100);
 
+          $('#fail-modal').on('hidden.bs.modal', function () {
+          setNextVideoSource();
+          $('#signText').val('');
+          });
+        }
+      }
     }
+
     // Attach event listener to success modal close event
     $('#success-modal').on('hidden.bs.modal', function () {
       setNextVideoSource();
