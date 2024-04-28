@@ -14,7 +14,6 @@
       <div class="col-7">
         <video class="w-100"  id="demo-video" src="{{url_for('static' , filename = 'A2.mp4')}}" controls></video>
       </div>
-
     </div>
 
     <div class="row mt-2"> 
@@ -135,7 +134,6 @@ $(document).ready(function() {
         $(".modal-body").html("Your answer is correct!");
         $('#success-modal').modal('show');}, 100);
       }else{
-        console.log(tries);
         if(tries>0){
           setTimeout(function() {
           $(".modal-body").html("Oops! Incorrect answer! You have " + tries + " tries.");
