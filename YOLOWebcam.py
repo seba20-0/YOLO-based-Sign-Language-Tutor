@@ -5,6 +5,7 @@ import math
 def RunYOLOWebcam(path_x):
     # Start webcam
     #global class_name
+    confidence_threshold = 0.5
     cap = cv2.VideoCapture(path_x)
     desired_width = 540
     desired_height = 300
@@ -32,10 +33,13 @@ def RunYOLOWebcam(path_x):
             boxes = r.boxes
             for box in boxes:
                 x1, y1, x2, y2 = box.xyxyn[0]
-                bounding_boxes.append((x1, y1, x2, y2))
+                confidence_score = box.conf[0]
                 detected_class = classNames[int(box.cls[0])]
-                detected_classes.append(detected_class)
-                confidence_scores.append(box.conf[0])
+
+                if confidence_score > confidence_threshold:  # Only keep detections above threshold
+                    bounding_boxes.append((x1, y1, x2, y2))
+                    detected_classes.append(detected_class)
+                    confidence_scores.append(confidence_score)
 
         # Resize the image to the desired resolution
         img_resized = cv2.resize(img, (desired_width, desired_height))

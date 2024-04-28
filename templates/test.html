@@ -23,7 +23,7 @@
       </div> 
       <div class="col d-flex justify-content-end">
         <div class="d-flex flex-row-reverse justify-content-end"> 
-          <button id="submit-button"  class="btn btn-primary">Submit</button> 
+          <button id="submit-button"  class="btn btn-primary" disabled >Submit</button> 
         </div>
       </div>
       </div>
@@ -141,7 +141,7 @@ $(document).ready(function() {
           $('#signText').val('');}, 100);
         }else{
           setTimeout(function() {
-          $(".modal-body").html("Youve run out of tries! The sign is "+ video);
+          $(".modal-body").html("You have run out of tries! The sign is "+ video);
           $('#fail-modal').modal('show');
           $('#signText').val('');}, 100);
 
